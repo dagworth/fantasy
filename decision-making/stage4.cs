@@ -1,0 +1,1 @@
+//this stage executes all the events that happen because of decisions

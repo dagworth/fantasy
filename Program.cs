@@ -4,13 +4,13 @@ int width = 5;
 int length = 5;
 int size = width*length;
 
-int simulation_steps = 4;
+int simulation_steps = 2;
 
 Random random = new Random();
 
-Location[] map = new Location[size];
+ILocation[] map = new ILocation[size];
 for(int i = 0; i < size; i++) {
-    map[i] = new Location();
+    map[i] = new Lounge();
 }
 
 Person createPerson(Races race, string name) {
@@ -35,20 +35,24 @@ Person createPerson(Races race, string name) {
         field.SetValue(stats, final_val);
     }
 
-    Location loc = map[random.Next(0,size)];
+    ILocation loc = map[random.Next(0,size)];
     Person clone = new(name, race, loc, personality, stats, random.Next(0,70) + 30);
     loc.people.Add(clone);
 
     return clone;
 }
 
+List<Person> people = [];
 
 for(int i = 0; i < 40; i++){
-   createPerson(Races.Human,"human"+i);
-   createPerson(Races.Elf,"elf"+i);
-   createPerson(Races.Demon,"demon"+i);
+   people.Add(createPerson(Races.Human,"human"+i));
+   people.Add(createPerson(Races.Elf,"elf"+i));
+   people.Add(createPerson(Races.Demon,"demon"+i));
 }
 
 for(int i = 0; i < simulation_steps; i++) {
-    
+    foreach (Person a in people) {
+        stage1.execute(a);
+    }
 }
+

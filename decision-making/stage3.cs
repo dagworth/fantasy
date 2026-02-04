@@ -1,0 +1,1 @@
+//this stage people will decide on how to react on what people arae doing
