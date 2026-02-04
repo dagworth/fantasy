@@ -30,11 +30,11 @@ public static class stage1 {
 
             foreach (Modifier mod in other_guy.modifiers) {
                 if (memories.TryGetValue(other_guy.id,out var memory)) {
-                    foreach (FieldInfo field in typeof(Perception).GetFields()) {
-                        int val = (int)field.GetValue(memory.perception)!;
+                    foreach (PropertyInfo property in typeof(Perception).GetProperties()) {
+                        double val = (double)property.GetValue(memory.perception)!;
 
                         //this equation probably should be changed later
-                        field.SetValue(current_perception, val);
+                        property.SetValue(current_perception, val);
                     }
                 } else {
                     //make new memory for that modifier with no perception
@@ -46,18 +46,18 @@ public static class stage1 {
             Memory memory_of_other_guy;
 
             if(memories.TryGetValue(other_guy.id,out var a)) {
-                Console.WriteLine($"{person.id} already has memory for {other_guy.id}");
+                //Console.WriteLine($"{person.id} already has memory for {other_guy.id}");
                 memory_of_other_guy = a;
-                foreach (FieldInfo field in typeof(Perception).GetFields()) {
-                    int current = (int)field.GetValue(current_perception)!;
-                    int other = (int)field.GetValue(memory_of_other_guy.perception)!;
+                foreach (PropertyInfo property in typeof(Perception).GetProperties()) {
+                    double current = (double)property.GetValue(current_perception)!;
+                    double other = (double)property.GetValue(memory_of_other_guy.perception)!;
                     //we dont want our perception of the guy be changing too much every time we see them
-                    double difference = dampen(current - other,1/3);
+                    double difference = dampen(current - other,1.0/3);
 
-                    field.SetValue(memory_of_other_guy.perception, current + difference);
+                    property.SetValue(memory_of_other_guy.perception, current + difference);
                 }
             } else {
-                Console.WriteLine($"{person.id} cretes new memory for {other_guy.id}");
+                // Console.WriteLine($"{person.id} cretes new memory for {other_guy.id}");
                 Memory new_memory = new Memory(current_perception);
                 memories[other_guy.id] = new_memory;
                 memory_of_other_guy = new_memory;
@@ -65,20 +65,20 @@ public static class stage1 {
 
             //this second loop changes all perception of the modifiers based on how we think about our guy
             foreach (Modifier mod in other_guy.modifiers) {
-                foreach (FieldInfo field in typeof(Perception).GetFields()) {
-                    int current = (int)field.GetValue(memory_of_other_guy)!;
-                    int other = (int)field.GetValue(memories[mod.id].perception)!;
+                foreach (PropertyInfo property in typeof(Perception).GetProperties()) {
+                    double current = (double)property.GetValue(memory_of_other_guy)!;
+                    double other = (double)property.GetValue(memories[mod.id].perception)!;
                     double difference = dampen(current - other,1/4);
 
                     //change for future
-                    field.SetValue(memory_of_other_guy.perception, current + difference);
+                    property.SetValue(memory_of_other_guy.perception, current + difference);
                 }
             }
 
-            foreach (FieldInfo field in typeof(Perception).GetFields()) {
-                int current = (int)field.GetValue(crowd_perception)!;
-                int other_guy_current = (int)field.GetValue(memory_of_other_guy.perception)!;
-                field.SetValue(crowd_perception,current + other_guy_current);
+            foreach (PropertyInfo property in typeof(Perception).GetProperties()) {
+                double current = (double)property.GetValue(crowd_perception)!;
+                double other_guy_current = (double)property.GetValue(memory_of_other_guy.perception)!;
+                property.SetValue(crowd_perception,current + other_guy_current);
             }
 
             crowd_perceptions[person] = crowd_perception;

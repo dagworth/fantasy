@@ -1,10 +1,12 @@
 ﻿using System.Reflection;
 
+var watch = System.Diagnostics.Stopwatch.StartNew();
+
 int width = 5;
 int length = 5;
 int size = width*length;
 
-int simulation_steps = 2;
+int simulation_steps = 100;
 
 Random random = new Random();
 
@@ -19,20 +21,18 @@ Person createPerson(Races race, string name) {
     Personality personality = new();
     Stats stats = new();
 
-    FieldInfo[] personality_fields = typeof(Personality).GetFields();
-    foreach (FieldInfo field in personality_fields) {
-        int base_val = (int)field.GetValue(info.personality)!;
+    foreach (PropertyInfo property in typeof(Personality).GetProperties()) {
+        double base_val = (double)property.GetValue(info.personality)!;
         double multiplier = .7 + (random.NextDouble() * .6);
-        int final_val = (int)Math.Round(base_val * multiplier);
-        field.SetValue(personality, final_val);
+        double final_val = (double)Math.Round(base_val * multiplier);
+        property.SetValue(personality, final_val);
     }
 
-    FieldInfo[] stats_fields = typeof(Stats).GetFields();
-    foreach (FieldInfo field in stats_fields) {
-        int base_val = (int)field.GetValue(info.stats)!;
+    foreach (PropertyInfo property in typeof(Stats).GetProperties()) {
+        double base_val = (double)property.GetValue(info.stats)!;
         double multiplier = .7 + (random.NextDouble() * .6);
-        int final_val = (int)Math.Round(base_val * multiplier);
-        field.SetValue(stats, final_val);
+        double final_val = (double)Math.Round(base_val * multiplier);
+        property.SetValue(stats, final_val);
     }
 
     ILocation loc = map[random.Next(0,size)];
@@ -56,3 +56,5 @@ for(int i = 0; i < simulation_steps; i++) {
     }
 }
 
+watch.Stop();
+Console.WriteLine($"executed in {watch.ElapsedMilliseconds}ms");

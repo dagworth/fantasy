@@ -20,44 +20,44 @@ public enum Personality_Mem {
 }
 
 public interface IPersonality {
-    int violent { get; set; }
-    int jealousy { get; set; }
-    int spiteful { get; set; }
-    int prideful { get; set; }
-    int trusting { get; set; }
-    int confident { get; set; }
+    double violent { get; set; }
+    double jealousy { get; set; }
+    double spiteful { get; set; }
+    double prideful { get; set; }
+    double trusting { get; set; }
+    double confident { get; set; }
 }
 
 public interface IStats {
-    int smart { get; set; }
-    int strength { get; set; }
-    int beauty { get; set; }
+    double smart { get; set; }
+    double strength { get; set; }
+    double beauty { get; set; }
 }
 
 public class Personality : IPersonality {
-    public int violent { get; set; }
-    public int jealousy { get; set; }
-    public int spiteful { get; set; }
-    public int prideful { get; set; }
-    public int trusting { get; set; }
-    public int confident { get; set; }
+    public double violent { get; set; }
+    public double jealousy { get; set; }
+    public double spiteful { get; set; }
+    public double prideful { get; set; }
+    public double trusting { get; set; }
+    public double confident { get; set; }
 }
 
 public class Stats : IStats {
-    public int smart { get; set; }
-    public int strength { get; set; }
-    public int beauty { get; set; }
+    public double smart { get; set; }
+    public double strength { get; set; }
+    public double beauty { get; set; }
 }
 
 public class Perception : IPersonality, IStats {
-    public int smart { get; set; }
-    public int strength { get; set; }
-    public int beauty { get; set; }
-    
-    public int violent { get; set; }
-    public int jealousy { get; set; }
-    public int spiteful { get; set; }
-    public int prideful { get; set; }
-    public int trusting { get; set; }
-    public int confident { get; set; }
+    public double smart { get; set; }
+    public double strength { get; set; }
+    public double beauty { get; set; }
+
+    public double violent { get; set; }
+    public double jealousy { get; set; }
+    public double spiteful { get; set; }
+    public double prideful { get; set; }
+    public double trusting { get; set; }
+    public double confident { get; set; }
 }
