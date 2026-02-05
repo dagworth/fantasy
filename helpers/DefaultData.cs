@@ -13,11 +13,14 @@ public static class DefaultData {
                     prideful = 50,
                     trusting = 30,
                     confident = 20,
+                    moral = 0,
+                    risky = 25,
                 },
                 new Stats() {
                     smart = 20,
                     strength = 10,
-                    beauty = 20
+                    beauty = 20,
+                    rich = 20,
                 }
             )
         },
@@ -29,27 +32,33 @@ public static class DefaultData {
                     prideful = 80,
                     trusting = 0,
                     confident = 90,
+                    moral = 0,
+                    risky = -50,
                 },
                 new Stats() {
                     smart = 70,
                     strength = 0,
                     beauty = 50,
+                    rich = 40,
                 }
             )
         },
         { Races.Demon, new(
                 new Personality() {
                     violent = 100,
-                    jealousy = 100,
-                    spiteful = 100,
-                    prideful = 100,
-                    trusting = -100,
-                    confident = 100,
+                    jealousy = 40,
+                    spiteful = 80,
+                    prideful = 90,
+                    trusting = -40,
+                    confident = 90,
+                    moral = -50,
+                    risky = 40,
                 },
                 new Stats() {
                     smart = 100,
                     strength = 100,
-                    beauty = -100
+                    beauty = -10,
+                    rich = -30,
                 }
             )
         },

@@ -6,9 +6,11 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 
-public static class stage1 {
-    private static Dictionary<Person, Perception> crowd_perceptions = [];
-    private static double dampen(double value, double magnitude) {
+//need to change how theres so many memories of people and mods created here, events and other places need them
+
+public class stage1(Simulation s) : IDecisionStep {
+    private Simulation sim = s;
+    private double dampen(double value, double magnitude) {
         if (value < 0) {
             return -Math.Pow(-value, magnitude);
         } else {
@@ -16,7 +18,8 @@ public static class stage1 {
         }
     }
 
-    public static void execute(Person person) {
+    public void execute(Person person) {
+        sim.crowd_perceptions = [];
         int count = 0;
         Dictionary<int,Memory> memories = person.memories;
         ILocation location = person.location;
@@ -28,36 +31,36 @@ public static class stage1 {
 
             Perception current_perception = new Perception();
 
+            //look at the guys modifiers
             foreach (Modifier mod in other_guy.modifiers) {
                 if (memories.TryGetValue(other_guy.id,out var memory)) {
                     foreach (PropertyInfo property in typeof(Perception).GetProperties()) {
-                        double val = (double)property.GetValue(memory.perception)!;
+                        double current = (double)property.GetValue(current_perception)!;
+                        double memory_perception = (double)property.GetValue(memory.perception)!;
 
-                        //this equation probably should be changed later
-                        property.SetValue(current_perception, val);
+                        //this equation probably should be changed later,
+                        //outlier can bring everything up
+                        property.SetValue(current_perception, current + memory_perception);
                     }
                 } else {
-                    //make new memory for that modifier with no perception
                     Memory new_memory = new Memory(current_perception);
                     memories[mod.id] = new_memory;
                 }
             }
 
+            //look at what we know about this guy
             Memory memory_of_other_guy;
-
             if(memories.TryGetValue(other_guy.id,out var a)) {
-                //Console.WriteLine($"{person.id} already has memory for {other_guy.id}");
                 memory_of_other_guy = a;
-                foreach (PropertyInfo property in typeof(Perception).GetProperties()) {
-                    double current = (double)property.GetValue(current_perception)!;
-                    double other = (double)property.GetValue(memory_of_other_guy.perception)!;
-                    //we dont want our perception of the guy be changing too much every time we see them
-                    double difference = dampen(current - other,1.0/3);
+                // foreach (PropertyInfo property in typeof(Perception).GetProperties()) {
+                //     double current = (double)property.GetValue(current_perception)!;
+                //     double other = (double)property.GetValue(memory_of_other_guy.perception)!;
+                //     double difference = dampen(current - other,1.0/3);
 
-                    property.SetValue(memory_of_other_guy.perception, current + difference);
-                }
+                //     //tjhere needs to be another dampen here or something, same problem as modifiers
+                //     property.SetValue(memory_of_other_guy.perception, current + difference);
+                // }
             } else {
-                // Console.WriteLine($"{person.id} cretes new memory for {other_guy.id}");
                 Memory new_memory = new Memory(current_perception);
                 memories[other_guy.id] = new_memory;
                 memory_of_other_guy = new_memory;
@@ -75,13 +78,16 @@ public static class stage1 {
                 }
             }
 
+
             foreach (PropertyInfo property in typeof(Perception).GetProperties()) {
-                double current = (double)property.GetValue(crowd_perception)!;
+                double current_crowd = (double)property.GetValue(crowd_perception)!;
                 double other_guy_current = (double)property.GetValue(memory_of_other_guy.perception)!;
-                property.SetValue(crowd_perception,current + other_guy_current);
+
+                //there needs to be an average out here or smth
+                property.SetValue(crowd_perception,current_crowd + other_guy_current);
             }
 
-            crowd_perceptions[person] = crowd_perception;
+            sim.crowd_perceptions[person] = crowd_perception;
         }
     }
 }

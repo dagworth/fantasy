@@ -15,10 +15,13 @@ public class Person : IMemorable {
     public Personality personality;
     public Stats stats;
 
-    public Person(string name, Races race, ILocation loc, Personality p, Stats s, int age = 0) {
+    public Perception self_perception;
+
+    public Person(string name, Races race, ILocation loc, Personality p, Stats s, Perception per, int age = 0) {
         this.name = name;
         this.race = race;
         this.age = age;
+        self_perception = per;
         location = loc;
         personality = p;
         stats = s;

@@ -41,18 +41,22 @@ public class Personality : IPersonality {
     public double prideful { get; set; }
     public double trusting { get; set; }
     public double confident { get; set; }
+    public double moral { get; set; }
+    public double risky { get; set; }
 }
 
 public class Stats : IStats {
     public double smart { get; set; }
     public double strength { get; set; }
     public double beauty { get; set; }
+    public double rich { get; set; }
 }
 
 public class Perception : IPersonality, IStats {
     public double smart { get; set; }
     public double strength { get; set; }
     public double beauty { get; set; }
+    public double rich { get; set; }
 
     public double violent { get; set; }
     public double jealousy { get; set; }
@@ -60,4 +64,6 @@ public class Perception : IPersonality, IStats {
     public double prideful { get; set; }
     public double trusting { get; set; }
     public double confident { get; set; }
+    public double moral { get; set; }
+    public double risky { get; set; }
 }
