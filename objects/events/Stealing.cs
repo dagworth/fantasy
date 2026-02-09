@@ -1,4 +1,6 @@
 public class Stealing : IEvent {
+    public int id { get; set; }
+
     public int discreteness {get; set;}
     public int visibility {get; set;}
     public Person[] participants {get; set;} = [];
@@ -27,7 +29,7 @@ public class Stealing : IEvent {
             + random.NextDouble() * Math.Pow(o.stats.rich,3)
             - random.NextDouble() * Math.Pow(o.stats.strength,3);
 
-            Console.WriteLine($"{guy.name} {stealing_index + want_to_steal_index} {o.name}");
+            //Console.WriteLine($"{guy.name} {stealing_index + want_to_steal_index} {o.name}");
             if(stealing_index + want_to_steal_index > 12000) {
                 Stealing clone = new Stealing();
                 clone.SetUp(sim,[guy,o]);

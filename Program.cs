@@ -4,16 +4,16 @@ Console.WriteLine("start");
 
 Simulation simulation = new Simulation(5,5);
 
-for(int i = 0; i < 20; i++){
+for(int i = 0; i < 2000; i++){
     simulation.createPerson(Races.Human,"human"+i);
     simulation.createPerson(Races.Elf,"elf"+i);
 }
 
-for(int i = 0; i < 2; i++) {
+for(int i = 0; i < 20; i++) {
     simulation.createPerson(Races.Demon,"demon"+i);
 }
 
-for(int i = 0; i < 2; i++) {
+for(int i = 0; i < 10; i++) {
     simulation.Simulate();
 }
 

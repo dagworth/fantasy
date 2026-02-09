@@ -1,8 +1,10 @@
-public interface IMemorable { }
+public interface IMemorable {
+    int id { get; set; }
+}
 
-public class Memory(Perception p) {
+public class Memory {
     public int memory_strength;
     public int positive;
     public Dictionary<int,int> associations = [];
-    public Perception perception = p;
+    public Perception perception = new Perception();
 }

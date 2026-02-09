@@ -1,7 +1,7 @@
 public class Person : IMemorable {
     private string[] logs = [];
 
-    public int id;
+    public int id { get; set; }
 
     public string name;
     public Races race;

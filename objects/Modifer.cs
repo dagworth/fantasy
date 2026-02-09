@@ -1,5 +1,5 @@
 public class Modifier : IMemorable {
-    public int id;
+    public int id { get; set; }
     public string name;
     public int condition;
 
