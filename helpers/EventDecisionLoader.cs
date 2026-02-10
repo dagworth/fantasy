@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Globalization;
 
 public static class EventDecisionLoader {
-    private static readonly Dictionary<Func<Simulation,Person,IEvent?>,Type> events = [];
+    private static readonly Dictionary<Func<Simulation,int,IEvent?>,Type> events = [];
 
     static EventDecisionLoader() {
         var assembly = Assembly.GetExecutingAssembly();
@@ -15,7 +15,7 @@ public static class EventDecisionLoader {
         }
     }
 
-    public static Dictionary<Func<Simulation,Person,IEvent?>,Type> GetEventDecisions() {
+    public static Dictionary<Func<Simulation,int,IEvent?>,Type> GetEventDecisions() {
         return events;
     }
 }

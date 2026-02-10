@@ -1,21 +1,20 @@
 using System.Reflection;
+using System.Collections.Concurrent;
 
 public class Simulation {
-    private readonly int size;
-    private readonly Random random = new Random();
-    private readonly List<Person> people = [];
-    private readonly ILocation[] map;
+    private readonly Random random;
+    
+    public readonly Population people;
+    public readonly Map map;
 
     private List<IDecisionStep> decision_steps;
 
-    public Dictionary<Person, Perception> crowd_perceptions = [];
+    public List<Perception> crowd_perceptions = [];
 
     public Simulation(int x, int y) {
-        size = x*y;
-        map = new ILocation[size];
-        for(int i = 0; i < size; i++) {
-            map[i] = new Lounge();
-        }
+        map = new Map(x,y);
+        people = new Population(this);
+        random = new Random();
 
         decision_steps = new List<IDecisionStep> {
             new stage1(this),
@@ -26,44 +25,13 @@ public class Simulation {
     }
 
     public void Simulate() {
+        Thread.CurrentThread.Priority = ThreadPriority.Highest;
         foreach (IDecisionStep step in decision_steps) {
-            foreach (Person a in people) {
-                step.execute(a);
-            }
+            Parallel.For(0, people.people_count, step.execute);
         }
     }
 
-    public Person createPerson(Races race, string name) {
-        RaceData info = DefaultData.get(race);
-
-        Perception perception = new();
-        Personality personality = new();
-        Stats stats = new();
-
-        foreach (PropertyInfo property in typeof(IPersonality).GetProperties()) {
-            double base_val = (double)property.GetValue(info.personality)!;
-            double multiplier = .7 + (random.NextDouble() * .6);
-            double final_val = (double)Math.Round(base_val * multiplier);
-            double self_per = (double)Math.Round(final_val * multiplier);
-            property.SetValue(personality, final_val);
-            property.SetValue(perception, self_per);
-        }
-
-        foreach (PropertyInfo property in typeof(IStats).GetProperties()) {
-            double base_val = (double)property.GetValue(info.stats)!;
-            double multiplier = .7 + (random.NextDouble() * .6);
-            double final_val = (double)Math.Round(base_val * multiplier);
-            double self_per = (double)Math.Round(final_val * multiplier);
-            property.SetValue(stats, final_val);
-            property.SetValue(perception, self_per);
-        }
-
-        ILocation loc = map[random.Next(0,size)];
-        Person clone = new(name, race, loc, personality, stats, perception, random.Next(0,70) + 30);
-        loc.people.Add(clone);
-
-        people.Add(clone);
-
-        return clone;
+    public void createPerson(Races race, string name) {
+        people.createPerson(race, name);
     }
 }

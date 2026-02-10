@@ -3,17 +3,17 @@ public class Stealing : IEvent {
 
     public int discreteness {get; set;}
     public int visibility {get; set;}
-    public Person[] participants {get; set;} = [];
+    public int[] participants {get; set;} = [];
 
-    public void SetUp(Simulation sim, Person[] participants) {
+    public void SetUp(Simulation sim, int[] participants) {
         this.participants = participants;
         discreteness = 85;
         visibility = 0;
 
-        Console.WriteLine($"{participants[0].name} trying to steal from {participants[1].name}");
+        // Console.WriteLine($"{participants[0].name} trying to steal from {participants[1].name}");
     }
 
-    public IEvent? choose_if_event(Simulation sim, Person guy) {
+    public IEvent? choose_if_event(Simulation sim, int guy) {
         Random random = new Random();
         Personality s = guy.personality;
         double stealing_index = 0
@@ -39,7 +39,7 @@ public class Stealing : IEvent {
         return null;
     }
 
-    public void noticed(Person guy) {
+    public void noticed(int guy) {
         
     }
 

@@ -8,15 +8,16 @@ using System.Reflection;
 
 public class stage1(Simulation s) : IDecisionStep {
     private Simulation sim = s;
+    private Population population = s.people;
+    private Map map = s.map;
 
-    public void execute(Person person) {
+    public void execute(int person) {
         sim.crowd_perceptions = [];
         int count = 0;
-        Dictionary<int,Memory> memories = person.memories;
-        ILocation location = person.location;
+        ILocation location = map.GetLocation(population.location_index[person]);
         Perception crowd_perception = new Perception();
 
-        foreach (Person other_guy in location.people) {
+        foreach (int other_guy in location.people) {
             count++;
             if(other_guy == person) continue;
 

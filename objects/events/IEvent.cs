@@ -3,10 +3,10 @@ using System.Runtime.CompilerServices;
 public interface IEvent : IMemorable {
     int discreteness { get; set; }
     int visibility { get; set; }
-    Person[] participants { get; set; }
+    int[] participants { get; set; }
 
-    void noticed(Person person);
-    void SetUp(Simulation sim, Person[] participants);
-    IEvent? choose_if_event(Simulation sim, Person guy);
+    void noticed(int person);
+    void SetUp(Simulation sim, int[] participants);
+    IEvent? choose_if_event(Simulation sim, int guy);
     void finished();
 }

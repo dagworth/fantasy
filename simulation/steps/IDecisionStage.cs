@@ -1,3 +1,3 @@
 public interface IDecisionStep {
-    void execute(Person person);
+    void execute(int person);
 }
