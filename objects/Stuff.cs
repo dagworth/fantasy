@@ -1,6 +1,7 @@
-public class Stuff : IMemorable {
-    public int id { get; set; }
-    public Stuff() {
-        id = IdHandler.MakeId(this);
+public class Stuff {
+    private int count = 0;
+
+    public int CreateModifier() {
+        return count++;
     }
 }

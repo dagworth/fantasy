@@ -1,11 +1,12 @@
-public class Modifier : IMemorable {
-    public int id { get; set; }
-    public string name;
-    public int condition;
+public class Modifiers {
+    private int count = 0;
+    public List<string> names = [];
+    public List<int> conditions = [];
 
-    public Modifier(string name, int condition) {
-        id = IdHandler.MakeId(this);
-        this.name = name;
-        this.condition = condition;
+    public int CreateModifier() {
+        names.Add("u");
+        conditions.Add(0);
+
+        return count++;
     }
 }

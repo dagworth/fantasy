@@ -1,3 +1,13 @@
+public enum Memorable {
+    Races,
+    Stat,
+    Personality,
+    Location,
+    Event,
+    Person,
+    Stuff
+}
+
 public enum Races {
     Human,
     Elf,

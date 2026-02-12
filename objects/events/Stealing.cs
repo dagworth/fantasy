@@ -10,12 +10,12 @@ public class Stealing : IEvent {
         discreteness = 85;
         visibility = 0;
 
-        // Console.WriteLine($"{participants[0].name} trying to steal from {participants[1].name}");
+        Console.WriteLine($"{participants[0]} trying to steal from {participants[1]}");
     }
 
     public IEvent? choose_if_event(Simulation sim, int guy) {
         Random random = new Random();
-        Personality s = guy.personality;
+        Personality s = sim.people.personalities[guy];
         double stealing_index = 0
             + random.NextDouble() * Math.Pow(s.jealousy,2)
             - random.NextDouble() * Math.Pow(s.moral,3)
@@ -23,11 +23,13 @@ public class Stealing : IEvent {
             + random.NextDouble() * Math.Pow(s.risky,3)
             + random.NextDouble() * Math.Pow(s.confident,2);
         
-        foreach (Person o in guy.location.people) {
+
+        
+        foreach (int o in sim.people.locations[guy].people) {
             if(o == guy) continue;
             double want_to_steal_index = 0
-            + random.NextDouble() * Math.Pow(o.stats.rich,3)
-            - random.NextDouble() * Math.Pow(o.stats.strength,3);
+            + random.NextDouble() * Math.Pow(sim.people.stats[o].rich,3)
+            - random.NextDouble() * Math.Pow(sim.people.stats[o].strength,3);
 
             //Console.WriteLine($"{guy.name} {stealing_index + want_to_steal_index} {o.name}");
             if(stealing_index + want_to_steal_index > 12000) {

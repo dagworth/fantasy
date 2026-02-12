@@ -10,7 +10,7 @@ public class Map {
         size = x*y;
         locations = new ILocation[size];
         for(int i = 0; i < size; i++) {
-            locations[i] = new Lounge();
+            locations[i] = new Lounge(i);
         }
     }
 

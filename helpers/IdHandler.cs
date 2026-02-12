@@ -1,20 +1,14 @@
 public static class IdHandler {
     private static int id_count = 10000;
-    private static readonly Dictionary<int, IMemorable> id_to_guy = [];
+    private static readonly Dictionary<int, int> id_to_guy = [];
 
-    public static IMemorable GetObjectById(int id) {
+    public static int GetObjectById(int id) {
         if (id_to_guy.TryGetValue(id, out var guy)) {
             return guy;
         } else {
             Console.WriteLine("This guy did not have an id");
-            return new Stuff();
+            return 0;
         }
-    }
-
-    public static int MakeId(IMemorable a) {
-        int id = id_count++;
-        id_to_guy[id] = a;
-        return id;
     }
 
     public static int GetId(Races race) {

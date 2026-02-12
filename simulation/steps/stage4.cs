@@ -2,7 +2,7 @@
 
 public class stage4(Simulation s) : IDecisionStep {
     private Simulation sim = s;
-    public void execute(Person person) {
+    public void execute(int person) {
         
     }
 }

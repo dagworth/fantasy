@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-public interface IEvent : IMemorable {
+public interface IEvent {
     int discreteness { get; set; }
     int visibility { get; set; }
     int[] participants { get; set; }

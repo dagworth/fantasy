@@ -8,33 +8,33 @@ public class Population {
     public Random random;
     public int people_count;
 
-    public List<string> logs;
+    public ConcurrentDictionary<int,string> logs;
 
-    public List<string> names;
-    public List<Races> races;
-    public List<int> ages;
-    public List<ILocation> locations;
-    public List<Personality> personalities;
-    public List<Stats> stats;
-    public List<Perception> self_perceptions;
+    public ConcurrentDictionary<int,string> names;
+    public ConcurrentDictionary<int,Races> races;
+    public ConcurrentDictionary<int,int> ages;
+    public ConcurrentDictionary<int,ILocation> locations;
+    public ConcurrentDictionary<int,Personality> personalities;
+    public ConcurrentDictionary<int,Stats> stats;
+    public ConcurrentDictionary<int,Perception> self_perceptions;
 
-    public List<Memory> memories;
-    public List<List<Modifier>> modifiers;
+    public ConcurrentDictionary<int,ConcurrentDictionary<int,int>> memories;
+    public ConcurrentDictionary<int,ConcurrentBag<int>> modifiers;
 
-    public Population(Simulation sim, int size = 4000) {
+    public Population(Simulation sim) {
         this.sim = sim;
 
-        logs = new(size);
-        names = new(size);
-        races = new(size);
-        ages = new(size);
-        locations = new(size);
-        personalities = new(size);
-        stats = new(size);
-        self_perceptions = new(size);
+        logs = [];
+        names = [];
+        races = [];
+        ages = [];
+        locations = [];
+        personalities = [];
+        stats = [];
+        self_perceptions = [];
 
-        memories = new(size);
-        modifiers = new(size);
+        memories = [];
+        modifiers = [];
 
         random = new Random();
     }
@@ -70,15 +70,17 @@ public class Population {
         }
 
         ILocation loc = sim.map.GetLocation(random.Next(0,sim.map.size));
-
-        names.Add(name);
-        races.Add(race);
-        locations.Add(loc);
         loc.people.Add(id);
-        personalities.Add(personality);
-        stats.Add(stat);
-        self_perceptions.Add(perception);
-        ages.Add(random.Next(0,70) + 30);
+
+        names[id] = name;
+        races[id] = race;
+        locations[id] = loc;
+        personalities[id] = personality;
+        stats[id] = stat;
+        memories[id] = [];
+        modifiers[id] = [];
+        self_perceptions[id] = perception;
+        ages[id] = random.Next(0,70) + 30;
         return id;
     }
 }

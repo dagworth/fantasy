@@ -1,37 +1,46 @@
 using System.Reflection;
-using System.Runtime.Intrinsics.X86;
+using System.Linq.Expressions;
 
 public class MemoryManager {
-    private static PropertyInfo[] perception_properties;
-
+    private static List<(Func<Perception, double> Get, Action<Perception, double> Set)> perception_accessors = [];
     private Simulation sim;
 
     static MemoryManager() {
-        perception_properties = typeof(Perception).GetProperties();
-        FastCompile.init(perception_properties);
+        var perception_properties = typeof(Perception).GetProperties();
+        foreach (var prop in perception_properties) {
+            var instance = Expression.Parameter(typeof(Perception), "p");
+            var getExpr = Expression.Property(instance, prop);
+            var value = Expression.Parameter(typeof(double), "v");
+            var setExpr = Expression.Assign(getExpr, value);
+
+            perception_accessors.Add(
+                (
+                    Expression.Lambda<Func<Perception, double>>(getExpr, instance).Compile(),
+                    Expression.Lambda<Action<Perception, double>>(setExpr, instance, value).Compile()
+                )
+            );
+        }
     }
 
     public MemoryManager(Simulation sim) {
         this.sim = sim;
     }
 
-    public Memory GetMemory(int p, int o) {
+    public int GetMemory(int p, int o, Memorable type) {
         if(sim.people.memories[p].TryGetValue(o,out var a)) {
             return a;
         } else {
-            Memory new_memory = new();
-            sim.people.memories[p][o] = new_memory;
-            return new_memory;
+            return sim.memories.CreateMemory(p,o,type,new Perception());
         }
     }
 
-    public Perception AnalyzeModifiers(int p, int other_guy, Memory mem) {
+    public Perception AnalyzeModifiers(int p, int other_guy, int mem_id) {
         //p will be used later based on what he feels about these items i guess
         Perception current_perception = new();
-        foreach (Modifier mod in sim.people.modifiers[other_guy]) {
-            foreach (var (get, set) in FastCompile.perception_accessors) {
+        foreach (int mod_id in sim.people.modifiers[other_guy]) {
+            foreach (var (get, set) in perception_accessors) {
                 double current = get(current_perception);
-                double memory_perception = get(mem.perception);
+                double memory_perception = get(sim.memories.perceptions[mem_id]);
 
                 set(current_perception, current + memory_perception);
             }
@@ -39,31 +48,31 @@ public class MemoryManager {
         return current_perception;
     }
 
-    public void ApplyNewPerception(Perception current_perception, Memory mem) {
-        foreach (var (get, set) in FastCompile.perception_accessors) {
+    public void ApplyNewPerception(Perception current_perception, int mem_id) {
+        foreach (var (get, set) in perception_accessors) {
             double current = get(current_perception);
-            double other = get(mem.perception);
+            //Console.WriteLine($"{mem_id} try in {sim.memories.perceptions.Count}");
+            double other = get(sim.memories.perceptions[mem_id]);
             double diff = MathHelper.dampen(current-other,.3);
 
-            set(mem.perception, current + diff);
+            set(sim.memories.perceptions[mem_id], current + diff);
         }
     }
 
-    public void UpdateModifierMemory(int p, int other_guy, Perception current_perception) {
-        Memory memory_of_other_guy = GetMemory(p,other_guy);
-        foreach (Modifier mod in other_guy.modifiers) {
-            foreach (var (get, set) in FastCompile.perception_accessors) {
-                double current = get(p.memories[mod.id].perception);
+    public void UpdateModifierMemory(int p, int other_guy_id, Perception current_perception) {
+        foreach (int mod_id in sim.people.modifiers[other_guy_id]) {
+            foreach (var (get, set) in perception_accessors) {
+                double current = get(sim.memories.perceptions[mod_id]);
                 double other = get(current_perception);
-                double diff = dampen(current-other,.25);
+                double diff = MathHelper.dampen(current-other,.25);
 
-                set(memory_of_other_guy.perception, current + diff);
+                set(sim.memories.perceptions[other_guy_id], current + diff);
             }
         }
     }
 
     public void AddPerceptionProperties(Perception a, Perception b) {
-        foreach (var (get, set) in FastCompile.perception_accessors) {
+        foreach (var (get, set) in perception_accessors) {
             double c = get(a);
             double d = get(b);
 

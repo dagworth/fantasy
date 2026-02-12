@@ -1,13 +1,21 @@
-public class Memory {
-    public List<int> memory_strengths = [];
-    public List<int> positivity = [];
-    public List<Dictionary<int,int>> associations = [];
-    public List<Perception> perceptions = [];
+using System.Collections.Concurrent;
 
-    public void CreateMemory(int id, Perception p) {
-        memory_strengths[id] = 0;
+public class Memories(Simulation s) {
+    private Simulation sim = s;
+    private int count = 0;
+    public ConcurrentDictionary<int,int> memory_strengths = [];
+    public ConcurrentDictionary<int,Memorable> memory_types = [];
+    public ConcurrentDictionary<int,int> positivity = [];
+    public ConcurrentDictionary<int,ConcurrentDictionary<int,int>> associations = [];
+    public ConcurrentDictionary<int,Perception> perceptions = [];
+
+    public int CreateMemory(int owner, int subject, Memorable mem_type, Perception p) {
+        int id = count++;
+        sim.people.memories[owner][subject] = id;
+        memory_types[id] = mem_type;
         positivity[id] = 0;
-        associations[id] = new();
+        associations[id] = [];
         perceptions[id] = p;
+        return id;
     }
 }
