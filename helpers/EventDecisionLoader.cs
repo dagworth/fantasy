@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Globalization;
 
 public static class EventDecisionLoader {
-    private static readonly Dictionary<Func<Simulation,int,IEvent?>,Type> events = [];
+    private static readonly List<Func<Simulation,int,IEvent?>> event_starts = [];
 
     static EventDecisionLoader() {
         var assembly = Assembly.GetExecutingAssembly();
@@ -11,11 +11,11 @@ public static class EventDecisionLoader {
         
         foreach (var cool in classes) {
             IEvent instance = (IEvent)Activator.CreateInstance(cool)!;
-            events[instance.choose_if_event] = cool;
+            event_starts.Add(instance.choose_if_event);
         }
     }
 
-    public static Dictionary<Func<Simulation,int,IEvent?>,Type> GetEventDecisions() {
-        return events;
+    public static List<Func<Simulation,int,IEvent?>> GetEventStartConditions() {
+        return event_starts;
     }
 }

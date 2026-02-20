@@ -2,9 +2,6 @@ using System.Reflection;
 using System.Collections.Concurrent;
 
 public class Simulation {
-    // private readonly Random random;
-    public readonly MemoryManager memoryManager;
-    
     public readonly Population people;
     public readonly Memories memories;
     public readonly Modifiers modifiers;
@@ -19,27 +16,26 @@ public class Simulation {
         people = new Population(this);
         memories = new Memories(this);
         modifiers = new Modifiers();
-        // random = new Random();
         crowd_perceptions = [];
 
-        memoryManager = new MemoryManager(this);
-
-        decision_steps = new List<IDecisionStep> {
+        decision_steps = [
             new stage1(this),
             new stage2(this),
             new stage3(this),
             new stage4(this)
-        };
+        ];
     }
 
     public void Simulate() {
-        Thread.CurrentThread.Priority = ThreadPriority.Highest;
+        map.ClearEvents();
         foreach (IDecisionStep step in decision_steps) {
-            Parallel.For(0, people.people_count, step.execute);
+            for (int i = 0; i < people.people_count; i++) {
+                step.execute(i);
+            }
         }
     }
 
-    public void createPerson(Races race, string name) {
-        people.createPerson(race, name);
+    public int createPerson(Races race, string name) {
+        return people.createPerson(race, name);
     }
 }

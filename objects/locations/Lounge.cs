@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+
 public class Lounge : ILocation {
     public int index { get; set; }
     public List<int> people { get; set; } = [];

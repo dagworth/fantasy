@@ -8,18 +8,18 @@ public class Population {
     public Random random;
     public int people_count;
 
-    public ConcurrentDictionary<int,string> logs;
+    public Dictionary<int,string> logs;
 
-    public ConcurrentDictionary<int,string> names;
-    public ConcurrentDictionary<int,Races> races;
-    public ConcurrentDictionary<int,int> ages;
-    public ConcurrentDictionary<int,ILocation> locations;
-    public ConcurrentDictionary<int,Personality> personalities;
-    public ConcurrentDictionary<int,Stats> stats;
-    public ConcurrentDictionary<int,Perception> self_perceptions;
+    public Dictionary<int,string> names;
+    public Dictionary<int,Races> races;
+    public Dictionary<int,int> ages;
+    public Dictionary<int,ILocation> locations;
+    public Dictionary<int,Personality> personalities;
+    public Dictionary<int,Stats> stats;
+    public Dictionary<int,Perception> self_perceptions;
 
-    public ConcurrentDictionary<int,ConcurrentDictionary<int,int>> memories;
-    public ConcurrentDictionary<int,ConcurrentBag<int>> modifiers;
+    public Dictionary<int,Dictionary<int,int>> memories;
+    public Dictionary<int,List<int>> modifiers;
 
     public Population(Simulation sim) {
         this.sim = sim;
@@ -69,7 +69,7 @@ public class Population {
             property.SetValue(perception, self_per);
         }
 
-        ILocation loc = sim.map.GetLocation(random.Next(0,sim.map.size));
+        ILocation loc = sim.map.GetLocation(random.Next(sim.map.size));
         loc.people.Add(id);
 
         names[id] = name;

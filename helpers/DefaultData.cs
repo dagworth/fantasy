@@ -13,7 +13,7 @@ public static class DefaultData {
                     prideful = 50,
                     trusting = 30,
                     confident = 20,
-                    moral = 0,
+                    moral = 50,
                     risky = 25,
                 },
                 new Stats() {
@@ -21,25 +21,27 @@ public static class DefaultData {
                     strength = 10,
                     beauty = 20,
                     rich = 20,
+                    perceptive = 40,
                 }
             )
         },
         { Races.Elf, new(
                 new Personality() {
                     violent = -50,
-                    jealousy = 0,
-                    spiteful = 0,
+                    jealousy = 30,
+                    spiteful = 30,
                     prideful = 80,
-                    trusting = 0,
+                    trusting = 30,
                     confident = 90,
-                    moral = 0,
+                    moral = 50,
                     risky = -50,
                 },
                 new Stats() {
                     smart = 70,
-                    strength = 0,
+                    strength = 30,
                     beauty = 50,
                     rich = 40,
+                    perceptive = 70,
                 }
             )
         },
@@ -59,6 +61,7 @@ public static class DefaultData {
                     strength = 100,
                     beauty = -10,
                     rich = -30,
+                    perceptive = 100,
                 }
             )
         },

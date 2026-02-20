@@ -1,13 +1,14 @@
 //this stage is when everyone will decide what to do based on the crowd_perception
 
-using System.Threading.Tasks.Dataflow;
+//lots of stuff can be cached here somewhere
 
 public class stage2(Simulation s) : IDecisionStep {
-    private Simulation sim = s;
+    private readonly Simulation sim = s;
     public void execute(int person) {
-        var dict = EventDecisionLoader.GetEventDecisions();
-        foreach (KeyValuePair<Func<Simulation,int,IEvent?>,Type> info in dict) {
-            IEvent? result = info.Key.Invoke(sim,person);
+        List<Func<Simulation,int,IEvent?>> dict = EventDecisionLoader.GetEventStartConditions();
+        //check is the function each location should have
+        foreach (Func<Simulation,int,IEvent?> check in dict) {
+            IEvent? result = check.Invoke(sim,person);
             if (result != null) {
                 sim.people.locations[person].events.Add(result);
                 return;

@@ -5,7 +5,7 @@ public interface IEvent {
     int visibility { get; set; }
     int[] participants { get; set; }
 
-    void noticed(int person);
+    void noticed(Simulation sim, int person);
     void SetUp(Simulation sim, int[] participants);
     IEvent? choose_if_event(Simulation sim, int guy);
     void finished();

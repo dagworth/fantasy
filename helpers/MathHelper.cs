@@ -6,4 +6,12 @@ public static class MathHelper {
             return Math.Pow(value, magnitude);
         }
     }
+
+    public static double GetWeight2(double val) {
+        return val * val * (val < 0 ? -1 : 1);
+    }
+
+    public static double GetWeight3(double val) {
+        return val * val * val;
+    }
 }
